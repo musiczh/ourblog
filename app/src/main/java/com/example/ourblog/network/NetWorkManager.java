@@ -15,4 +15,7 @@ public class NetWorkManager {
         }
         return mNetWorkManager;
     }
+
+
+
 }

@@ -1,15 +1,15 @@
 package com.example.ourblog;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.example.ourblog.view.activity.BaseActivity;
+
 /**
  * @author singsong
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
     public static Context getContext(){
