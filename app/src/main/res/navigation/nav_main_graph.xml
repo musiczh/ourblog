@@ -20,13 +20,6 @@
         android:id="@+id/mainFragment"
         android:name="com.example.ourblog.view.fragment.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" >
-        <action
-            android:id="@+id/action_mainFragment_to_myFragment"
-            app:destination="@id/myFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_blogFragment"
-            app:destination="@id/blogFragment" />
-    </fragment>
+        tools:layout="@layout/main_fragment" />
 
 </navigation>

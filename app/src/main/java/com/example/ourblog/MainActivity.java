@@ -32,6 +32,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mViewModel = new ViewModelProvider(this).get(MainActViewModel.class);
         context = getApplicationContext();
+        viewBinding();
 
     }
 
