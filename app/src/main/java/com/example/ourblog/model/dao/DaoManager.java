@@ -1,4 +1,4 @@
-package com.example.ourblog.dao;
+package com.example.ourblog.model.dao;
 
 /**
  * @author singsong

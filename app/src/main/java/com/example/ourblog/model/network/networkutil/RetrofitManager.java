@@ -1,4 +1,4 @@
-package com.example.ourblog.network.networkutil;
+package com.example.ourblog.model.network.networkutil;
 
 
 import com.example.ourblog.MainActivity;
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import static com.example.ourblog.network.UrlStaticQuality.BASE_URL;
+import static com.example.ourblog.model.network.UrlStaticQuality.BASE_URL;
 
 /**
  * @author singsong

@@ -1,4 +1,4 @@
-package com.example.ourblog.network.networkutil;
+package com.example.ourblog.model.network.networkutil;
 
 import android.content.Context;
 import android.util.Log;

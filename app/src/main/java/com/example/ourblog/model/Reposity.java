@@ -1,7 +1,7 @@
 package com.example.ourblog.model;
 
-import com.example.ourblog.dao.DaoManager;
-import com.example.ourblog.network.NetWorkManager;
+import com.example.ourblog.model.dao.DaoManager;
+import com.example.ourblog.model.network.NetWorkManager;
 
 /**
  * @author singsong

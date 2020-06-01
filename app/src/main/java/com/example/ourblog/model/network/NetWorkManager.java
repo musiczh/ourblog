@@ -1,4 +1,4 @@
-package com.example.ourblog.network;
+package com.example.ourblog.model.network;
 
 /**
  * @author singsong
