@@ -24,6 +24,9 @@ public class MainActivity extends BaseActivity {
         return context;
     }
 
+    /**
+     * bottomBarHideManager: 底部导航栏的隐藏管理类
+     */
     private MainActViewModel mViewModel;
     private NavController mNavController;
     public BottomBarHideManager bottomBarHideManager;
@@ -35,7 +38,7 @@ public class MainActivity extends BaseActivity {
         mViewModel = new ViewModelProvider(this).get(MainActViewModel.class);
         context = getApplicationContext();
 
-        //绑定view实例
+        //绑定view实例并进行初始化
         viewBinding();
     }
 
