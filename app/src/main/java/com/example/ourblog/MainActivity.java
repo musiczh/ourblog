@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
+import com.example.ourblog.util.BottomBarHideManager;
 import com.example.ourblog.view.activity.BaseActivity;
 import com.example.ourblog.viewmodel.MainActViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,7 +26,7 @@ public class MainActivity extends BaseActivity {
 
     private MainActViewModel mViewModel;
     private NavController mNavController;
-
+    public BottomBarHideManager bottomBarHideManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,9 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mViewModel = new ViewModelProvider(this).get(MainActViewModel.class);
         context = getApplicationContext();
-        viewBinding();
 
+        //绑定view实例
+        viewBinding();
     }
 
     @Override
@@ -66,6 +69,7 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        bottomBarHideManager = new BottomBarHideManager(bottomNavigationView);
     }
 
     public NavController getNavController() {
