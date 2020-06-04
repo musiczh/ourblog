@@ -26,15 +26,15 @@ public class RetrofitManager {
      * 构造器私有，全局retrofit单例
      */
     private RetrofitManager(){
-        //添加cookie相关的拦截器
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-        httpClientBuilder.connectTimeout(15, TimeUnit.SECONDS);
-        httpClientBuilder.addInterceptor(new ReceivedCookiesInterceptor(MainActivity.getContext()));
-        httpClientBuilder.addInterceptor(new AddCookiesInterceptor(MainActivity.getContext()));
+        //添加token拦截器,记住登录
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new KeepTokenInterceptor())
+                .build();
+
 
 
         mRetrofit = new Retrofit.Builder()
-                .client(httpClientBuilder.build())
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();

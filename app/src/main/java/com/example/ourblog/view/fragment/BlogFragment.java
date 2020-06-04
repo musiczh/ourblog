@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,16 @@ import android.widget.Button;
 
 import com.example.ourblog.MainActivity;
 import com.example.ourblog.R;
+import com.example.ourblog.model.network.networkutil.KeepTokenInterceptor;
+import com.example.ourblog.util.ThreadPoolManager;
 import com.example.ourblog.viewmodel.BlogViewModel;
+
+import java.io.IOException;
+import java.util.concurrent.ThreadPoolExecutor;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author singsong
@@ -45,6 +55,7 @@ public class BlogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.bottomBarHideManager.hideBar();
+
             }
         });
 
