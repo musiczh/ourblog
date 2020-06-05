@@ -22,6 +22,6 @@ public interface WanArticleItemDao {
     void insertAll(WanArticleItem... items);
 
     @Query("select * from wan_article_item_table")
-    LiveData<List<WanArticleItem>> getItemAll();
+    List<WanArticleItem> getItemAll();
 
 }

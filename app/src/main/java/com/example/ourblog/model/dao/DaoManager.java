@@ -8,6 +8,7 @@ import com.example.ourblog.model.WanArticleItem;
 import com.example.ourblog.model.dao.room.AppDatabase;
 import com.example.ourblog.model.dao.room.WanArticleItemDao;
 import com.example.ourblog.util.ThreadPoolManager;
+import com.example.ourblog.viewmodel.BaseViewModel;
 
 import java.util.List;
 
@@ -45,8 +46,13 @@ public class DaoManager {
 
     }
 
-    public LiveData<List<WanArticleItem>> getWanArtiItem(){
-        return mDb.wanArticleItemDao().getItemAll();
+    public void getWanArtiItem(BaseViewModel.CallBack<List<WanArticleItem>> callBack){
+        mThreadPoolManager.addDefaultTask(new Runnable() {
+            @Override
+            public void run() {
+                callBack.success(mDb.wanArticleItemDao().getItemAll());
+            }
+        });
     }
 
 

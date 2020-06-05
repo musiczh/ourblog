@@ -16,7 +16,7 @@ import java.util.List;
 
 public class WanViewModel extends ViewModel {
     // TODO: Implement the ViewModel
-    private LiveData<List<WanArticleItem>> mLiveItems;
+    private MutableLiveData<List<WanArticleItem>> mLiveItems = new MutableLiveData<>();
     private  MutableLiveData<String> mRecycleBottom;
     private int page=0;
     private BaseViewModel.CallBack<List<WanArticleItem>> mRefreashCallBack;
@@ -31,7 +31,6 @@ public class WanViewModel extends ViewModel {
     private void init(){
         mReposity= Reposity.getInstance();
         mRecycleBottom=new MutableLiveData<>();
-        mRecycleBottom.setValue("正在努力加载...");
         mRefreashCallBack=new BaseViewModel.CallBack<List<WanArticleItem>>(){
 
             @Override
@@ -40,16 +39,21 @@ public class WanViewModel extends ViewModel {
                 if(list!=null){
                     list.clear();
                     list.addAll(items);
+                    mLiveItems.postValue(list);
+                }else{
+                    mLiveItems.postValue(items);
                 }
+
             }
 
             @Override
             public void failed(String msg) {
                 Toast.makeText(MainActivity.getContext(),msg,Toast.LENGTH_SHORT).show();
-                mRecycleBottom.setValue(msg);
+                mRecycleBottom.postValue(msg);
+                page--;
             }
         };
-        mLiveItems= mReposity.getWanArticleItem(String.valueOf(page++),true,mRefreashCallBack);
+        mReposity.getWanArticleItem(String.valueOf(page++),true,mRefreashCallBack);
     }
 
     public void getMoreItem(){
@@ -59,14 +63,22 @@ public class WanViewModel extends ViewModel {
                 List<WanArticleItem> list=mLiveItems.getValue();
                 if(list!=null){
                     list.addAll(items);
+                    mLiveItems.setValue(list);
                 }
             }
 
             @Override
             public void failed(String msg) {
                 Toast.makeText(MainActivity.getContext(),msg,Toast.LENGTH_SHORT).show();
+                mRecycleBottom.postValue(msg);
+                page--;
             }
         });
+    }
+
+    public void refreshItems(){
+        page=0;
+        mReposity.getWanArticleItem(String.valueOf(page++),false,mRefreashCallBack);
     }
 
     public LiveData<List<WanArticleItem>> getItems() { return mLiveItems; }

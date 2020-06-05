@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class WanFragment extends Fragment {
     private WanViewModel mViewModel;
     private RecyclerView mRecyclerView;
     private ArticleAdapter mAdapter;
-    private TextView mRecycleBotText;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -63,14 +64,16 @@ public class WanFragment extends Fragment {
             @Override
             public void onChanged(List<WanArticleItem> items) {
                 mAdapter.setmArticleList(items);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
         mViewModel.getRecycleBottomString().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                mRecycleBotText.setText(s);
+                mAdapter.setBottomText(s);
             }
         });
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -87,11 +90,18 @@ public class WanFragment extends Fragment {
             }
         });
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mViewModel.refreshItems();
+            }
+        });
+
     }
 
     private void init(View view){
-        mRecycleBotText=view.findViewById(R.id.recycle_bottom);
         mRecyclerView=view.findViewById(R.id.recycler_view);
+        mSwipeRefreshLayout=view.findViewById(R.id.refresh);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.getContext()));
         mAdapter=new ArticleAdapter(new ArrayList<WanArticleItem>());
         mRecyclerView.setAdapter(mAdapter);
@@ -99,16 +109,22 @@ public class WanFragment extends Fragment {
 
     public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
         private List<WanArticleItem> mArticleList;
+        private String bottomText="正在努力加载...";
          class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView shareTime;
             TextView author;
+            TextView bottom;
 
-            public ViewHolder(View view) {
+            public ViewHolder(View view,int viewType) {
                 super(view);
-                title = view.findViewById(R.id.title);
-                shareTime = view.findViewById(R.id.time);
-                author = view.findViewById(R.id.author);
+                if(viewType==R.layout.article_item){
+                    title = view.findViewById(R.id.title);
+                    shareTime = view.findViewById(R.id.time);
+                    author = view.findViewById(R.id.author);
+                }else{
+                    bottom=view.findViewById(R.id.recycle_bottom);
+                }
             }
         }
 
@@ -120,37 +136,62 @@ public class WanFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.article_item, parent, false);
-            ViewHolder holder=new ViewHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position=holder.getAdapterPosition();
-                    Intent intent = new Intent(MainActivity.getContext(), WebActivity.class);
-                    intent.putExtra("link", mArticleList.get(position).getLink());
-                    WanFragment.this.startActivity(intent);
-                }
-            });
+                    .inflate(viewType, parent, false);
+            ViewHolder holder=new ViewHolder(view,viewType);
+            int position=holder.getAdapterPosition();
+            if(position<mArticleList.size()){
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(MainActivity.getContext(), WebActivity.class);
+                        intent.putExtra("link", mArticleList.get(position).getLink());
+                        WanFragment.this.startActivity(intent);
+                    }
+                });
+            }
+
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
-                 WanArticleItem item = mArticleList.get(position);
-                 holder.title.setText(item.getTitle());
-                 holder.shareTime.setText(item.getNiceShareDate());
-                 holder.author.setText(item.getShareUser());
+
+                 if(position<mArticleList.size()){
+                     WanArticleItem item = mArticleList.get(position);
+                     holder.title.setText(item.getTitle());
+                     holder.shareTime.setText(item.getNiceShareDate());
+                     holder.author.setText(item.getShareUser());
+                 }else{
+                     holder.bottom.setText(bottomText);
+                 }
+
 
         }
 
         @Override
         public int getItemCount() {
-            return mArticleList.size();
+            return mArticleList.size()+1;
         }
 
         public void setmArticleList(List<WanArticleItem> mArticleList) {
             this.mArticleList = mArticleList;
             this.notifyDataSetChanged();
+        }
+
+        public void setBottomText(String bottomText) {
+            this.bottomText = bottomText;
+            this.notifyItemChanged(mArticleList.size());
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+             if(position==mArticleList.size()){
+                 return R.layout.recycle_bottom;
+             }else{
+                 return R.layout.article_item;
+             }
+
         }
     }
 
