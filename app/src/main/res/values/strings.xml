@@ -3,4 +3,5 @@
     <string name="main_page">首页</string>
     <string name="blog">博客圈</string>
     <string name="my">我的</string>
+    <string name="title">标题</string>
 </resources>

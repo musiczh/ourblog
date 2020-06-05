@@ -5,7 +5,7 @@ package com.example.ourblog.model.network;
  */
 public class UrlStaticQuality {
 
-    public static final String BASE_URL = "https://rdc.kim:888";
+    public static final String BASE_URL = "https://www.wanandroid.com/";
 
 
 
