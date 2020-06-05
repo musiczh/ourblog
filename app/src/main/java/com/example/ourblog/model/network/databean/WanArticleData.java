@@ -1,4 +1,4 @@
-package com.example.ourblog.model.network.bean;
+package com.example.ourblog.model.network.databean;
 
 import java.util.List;
 

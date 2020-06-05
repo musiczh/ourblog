@@ -1,14 +1,10 @@
 package com.example.ourblog.model.dao.room;
 
-import androidx.lifecycle.ComputableLiveData;
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Entity;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.ourblog.model.WanArticleItem;
+import com.example.ourblog.model.bean.WanArticleItem;
 
 import java.util.List;
 

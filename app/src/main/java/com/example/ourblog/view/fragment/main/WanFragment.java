@@ -1,10 +1,7 @@
-package com.example.ourblog.view.fragment;
+package com.example.ourblog.view.fragment.main;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,21 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ourblog.MainActivity;
 import com.example.ourblog.R;
-import com.example.ourblog.model.WanArticleItem;
-import com.example.ourblog.util.BottomBarHideManager;
+import com.example.ourblog.model.bean.WanArticleItem;
 import com.example.ourblog.view.activity.WebActivity;
-import com.example.ourblog.viewmodel.MainViewModel;
-import com.example.ourblog.viewmodel.WanViewModel;
+import com.example.ourblog.viewmodel.mainviewmodel.WanViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +42,7 @@ public class WanFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.wan_fragment, container, false);
+        View view=inflater.inflate(R.layout.ariticle_iten_fragment, container, false);
         init(view);
         return view;
     }
@@ -71,6 +63,7 @@ public class WanFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 mAdapter.setBottomText(s);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -103,22 +96,26 @@ public class WanFragment extends Fragment {
         mRecyclerView=view.findViewById(R.id.recycler_view);
         mSwipeRefreshLayout=view.findViewById(R.id.refresh);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.getContext()));
-        mAdapter=new ArticleAdapter(new ArrayList<WanArticleItem>());
+        mAdapter=new ArticleAdapter(new ArrayList<WanArticleItem>(),this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
+    public static class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
         private List<WanArticleItem> mArticleList;
         private String bottomText="正在努力加载...";
-         class ViewHolder extends RecyclerView.ViewHolder {
+        private Fragment mFragment;
+
+         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView shareTime;
             TextView author;
             TextView bottom;
+            View view;
 
-            public ViewHolder(View view,int viewType) {
+            public ViewHolder(View view, int viewType) {
                 super(view);
-                if(viewType==R.layout.article_item){
+                this.view=view;
+                if(viewType==R.layout.wan_article_item){
                     title = view.findViewById(R.id.title);
                     shareTime = view.findViewById(R.id.time);
                     author = view.findViewById(R.id.author);
@@ -128,8 +125,9 @@ public class WanFragment extends Fragment {
             }
         }
 
-        public ArticleAdapter(List<WanArticleItem> articleList) {
+        public ArticleAdapter(List<WanArticleItem> articleList, Fragment fragment) {
             mArticleList = articleList;
+            mFragment=fragment;
         }
 
         @NotNull
@@ -137,19 +135,9 @@ public class WanFragment extends Fragment {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(viewType, parent, false);
-            ViewHolder holder=new ViewHolder(view,viewType);
+            ViewHolder holder= new ViewHolder(view, viewType);
             int position=holder.getAdapterPosition();
-            if(position<mArticleList.size()){
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
 
-                        Intent intent = new Intent(MainActivity.getContext(), WebActivity.class);
-                        intent.putExtra("link", mArticleList.get(position).getLink());
-                        WanFragment.this.startActivity(intent);
-                    }
-                });
-            }
 
             return holder;
         }
@@ -157,14 +145,24 @@ public class WanFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
 
-                 if(position<mArticleList.size()){
-                     WanArticleItem item = mArticleList.get(position);
-                     holder.title.setText(item.getTitle());
-                     holder.shareTime.setText(item.getNiceShareDate());
-                     holder.author.setText(item.getShareUser());
-                 }else{
-                     holder.bottom.setText(bottomText);
-                 }
+            if(position<mArticleList.size()){
+                WanArticleItem item = mArticleList.get(position);
+                holder.title.setText(item.getTitle());
+                holder.shareTime.setText(item.getNiceShareDate());
+                holder.author.setText(item.getShareUser());
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(MainActivity.getContext(), WebActivity.class);
+                        intent.putExtra("link", mArticleList.get(position).getLink());
+                        mFragment.startActivity(intent);
+                    }
+                });
+
+            }else{
+                holder.bottom.setText(bottomText);
+            }
 
 
         }
@@ -186,13 +184,12 @@ public class WanFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-             if(position==mArticleList.size()){
-                 return R.layout.recycle_bottom;
-             }else{
-                 return R.layout.article_item;
-             }
+            if(position==mArticleList.size()){
+                return R.layout.recycle_bottom;
+            }else{
+                return R.layout.wan_article_item;
+            }
 
         }
     }
-
 }

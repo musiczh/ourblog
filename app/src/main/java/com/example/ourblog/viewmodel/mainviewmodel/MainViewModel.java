@@ -1,18 +1,9 @@
-package com.example.ourblog.viewmodel;
+package com.example.ourblog.viewmodel.mainviewmodel;
 
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ourblog.MainActivity;
-import com.example.ourblog.model.Reposity;
-import com.example.ourblog.model.WanArticleItem;
-
-import java.util.List;
-
-public class MainViewModel extends BaseViewModel {
+public class MainViewModel extends ViewModel {
     // TODO: Implement the ViewModel
     /**private LiveData<List<WanArticleItem>> mLiveItems;
     private int page=0;

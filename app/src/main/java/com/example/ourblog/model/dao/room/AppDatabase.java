@@ -6,9 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.ourblog.model.WanArticleItem;
+import com.example.ourblog.model.bean.GankArticleItem;
+import com.example.ourblog.model.bean.WanArticleItem;
 
-@Database(entities = {WanArticleItem.class}, version = 1,exportSchema = false)
+@Database(entities = {WanArticleItem.class, GankArticleItem.class}, version = 1,exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase instance;
@@ -26,4 +27,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract WanArticleItemDao wanArticleItemDao();
+
+    public abstract GankArticleItemDao grankArticleItemDao();
 }

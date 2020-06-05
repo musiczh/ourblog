@@ -1,13 +1,11 @@
 package com.example.ourblog.model;
 
-import androidx.lifecycle.ComputableLiveData;
-import androidx.lifecycle.LiveData;
-
+import com.example.ourblog.CallBack;
+import com.example.ourblog.model.bean.GankArticleItem;
+import com.example.ourblog.model.bean.WanArticleItem;
 import com.example.ourblog.model.dao.DaoManager;
 import com.example.ourblog.model.network.NetWorkManager;
-import com.example.ourblog.viewmodel.BaseViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +30,7 @@ public class Reposity {
     }
 
     //如果是初始化就先从数据库拿数据再访问网络，如果不是则直接访问网路
-    public void getWanArticleItem(final String id, boolean isInit, final BaseViewModel.CallBack<List<WanArticleItem>> callBack){
+    public void getWanArticleItem(final String id, boolean isInit, final CallBack<List<WanArticleItem>> callBack){
         //如果是初始化就访问数据库获取数据
         if(isInit){
             daoManager.getWanArtiItem(callBack);
@@ -54,10 +52,29 @@ public class Reposity {
         });
     }
 
-    public interface CallBack<T> {
+    public void getGranArticleItem(final String id, boolean isInit, final CallBack<List<GankArticleItem>> callBack){
+        //如果是初始化就访问数据库获取数据
+        if(isInit){
+            daoManager.getGrankArtiItem(callBack);
+        }
+        netWorkManager.getGrankArticle(id,new CallBack<List<GankArticleItem>>(){
 
-        void success(T t);
-        void failed(String msg);
+            @Override
+            public void success(List<GankArticleItem> items) {
+                callBack.success(items);
+                if("1".equals(id)){
+                    daoManager.insertGraArtiItem(items);
+                }
+            }
+
+            @Override
+            public void failed(String msg) {
+                callBack.failed(msg);
+            }
+        });
     }
+
+
+
 
 }

@@ -1,8 +1,10 @@
-package com.example.ourblog.model;
+package com.example.ourblog.model.bean;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,11 +25,12 @@ public class WanArticleItem {
     private String title;
 
 
-    public WanArticleItem(String link, String niceShareDate, String title, String shareUser){
-        this.link=link;
-        this.niceShareDate=niceShareDate;
-        this.title=title;
-        this.shareUser=shareUser;
+    public WanArticleItem(@NotNull String link, String niceShareDate, String title, String shareUser) {
+        this.link = link;
+        this.niceShareDate = niceShareDate;
+        this.title = title;
+        this.shareUser = shareUser;
+
     }
 
     public String getLink() {
@@ -61,4 +64,5 @@ public class WanArticleItem {
     public void setTitle(String title) {
         this.title = title;
     }
+
 }

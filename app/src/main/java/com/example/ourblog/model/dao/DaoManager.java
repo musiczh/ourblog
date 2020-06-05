@@ -1,14 +1,13 @@
 package com.example.ourblog.model.dao;
 
-import androidx.lifecycle.ComputableLiveData;
-import androidx.lifecycle.LiveData;
-
+import com.example.ourblog.CallBack;
 import com.example.ourblog.MainActivity;
-import com.example.ourblog.model.WanArticleItem;
+import com.example.ourblog.model.bean.GankArticleItem;
+import com.example.ourblog.model.bean.WanArticleItem;
 import com.example.ourblog.model.dao.room.AppDatabase;
+import com.example.ourblog.model.dao.room.GankArticleItemDao;
 import com.example.ourblog.model.dao.room.WanArticleItemDao;
 import com.example.ourblog.util.ThreadPoolManager;
-import com.example.ourblog.viewmodel.BaseViewModel;
 
 import java.util.List;
 
@@ -43,10 +42,9 @@ public class DaoManager {
                 itemDao.insertAll(items.toArray(new WanArticleItem[0]));
             }
         });
-
     }
 
-    public void getWanArtiItem(BaseViewModel.CallBack<List<WanArticleItem>> callBack){
+    public void getWanArtiItem(CallBack<List<WanArticleItem>> callBack){
         mThreadPoolManager.addDefaultTask(new Runnable() {
             @Override
             public void run() {
@@ -54,6 +52,29 @@ public class DaoManager {
             }
         });
     }
+
+    public void insertGraArtiItem(final List<GankArticleItem> items){
+
+        final GankArticleItemDao itemDao=  mDb.grankArticleItemDao();
+        mThreadPoolManager.addDefaultTask(new Runnable() {
+            @Override
+            public void run() {
+                itemDao.deleteAll();
+                itemDao.insertAll(items.toArray(new GankArticleItem[0]));
+            }
+        });
+    }
+
+    public void getGrankArtiItem(CallBack<List<GankArticleItem>> callBack){
+        mThreadPoolManager.addDefaultTask(new Runnable() {
+            @Override
+            public void run() {
+                callBack.success(mDb.grankArticleItemDao().getItemAll());
+            }
+        });
+    }
+
+
 
 
 }

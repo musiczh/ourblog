@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -18,7 +19,8 @@
             android:text="@string/title"
             android:textAllCaps="true"
             android:textSize="15sp"
-            android:textColor="#160606" />
+            android:textColor="#160606"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/author"
@@ -26,11 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             android:layout_toStartOf="@id/time"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:maxLines="1"
             android:layout_marginEnd="25dp"
-            android:text="作者"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/time"
@@ -38,11 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:layout_marginEnd="15dp"
             android:maxLines="1"
-            android:text="两小时前"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:ellipsize="end"/>
 
     </RelativeLayout>
 

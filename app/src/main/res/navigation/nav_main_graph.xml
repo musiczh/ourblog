@@ -18,7 +18,7 @@
         tools:layout="@layout/blog_fragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.ourblog.view.fragment.MainFragment"
+        android:name="com.example.ourblog.view.fragment.main.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" />
 

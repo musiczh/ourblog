@@ -1,15 +1,15 @@
 package com.example.ourblog.model.network;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.example.ourblog.model.Reposity;
-import com.example.ourblog.model.network.bean.WanArticleData;
-import com.example.ourblog.model.WanArticleItem;
-import com.example.ourblog.model.network.api.WanArticleApi;
+import com.example.ourblog.CallBack;
+import com.example.ourblog.model.bean.GankArticleItem;
+import com.example.ourblog.model.bean.WanArticleItem;
+import com.example.ourblog.model.network.api.GankApiService;
+import com.example.ourblog.model.network.databean.GankArticleData;
+import com.example.ourblog.model.network.databean.WanArticleData;
+import com.example.ourblog.model.network.api.WanApiService;
 import com.example.ourblog.model.network.networkutil.RetrofitManager;
-import com.example.ourblog.viewmodel.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +38,9 @@ public class NetWorkManager {
         return mNetWorkManager;
     }
 
-    public void getWanArticle(String id, final Reposity.CallBack<List<WanArticleItem>> callBack){
+    public void getWanArticle(String id, final CallBack<List<WanArticleItem>> callBack){
         RetrofitManager manager=RetrofitManager.getInstance();
-        WanArticleApi api=manager.createRs(WanArticleApi.class);
+        WanApiService api=manager.createRs(WanApiService.class);
         Call<WanArticleData> items=api.getArticle(id);
         items.enqueue(new Callback<WanArticleData>() {
             @Override
@@ -68,6 +68,44 @@ public class NetWorkManager {
 
             @Override
             public void onFailure(@NonNull Call<WanArticleData> call, @NonNull Throwable t) {
+                callBack.failed(INTERNET_ERROR);
+            }
+        });
+    }
+
+    public void getGrankArticle(String id, final CallBack<List<GankArticleItem>> callBack){
+        RetrofitManager manager=RetrofitManager.getInstance();
+        GankApiService api=manager.createRs(GankApiService.class);
+        Call<GankArticleData> items=api.getArticle(id);
+        items.enqueue(new Callback<GankArticleData>() {
+            @Override
+            public void onResponse(@NonNull Call<GankArticleData> call, @NonNull Response<GankArticleData> response) {
+                GankArticleData data=response.body();
+                if(data==null){
+                    callBack.failed(SERVER_ERROR);
+                }else if(data.getStatus()!=100){
+                    callBack.failed("错误代码：100");
+                }else{
+                    List<GankArticleData.DataBean> datasBeanList=data.getData();
+                    List<GankArticleItem> items=new ArrayList<>();
+                    GankArticleData.DataBean temp;
+                    String imgLink=null;
+                    for(int i=0;i<datasBeanList.size();i++){
+                        temp=datasBeanList.get(i);
+                        if(temp.getImages().size()>0){
+                            imgLink=temp.getImages().get(0);
+                        }
+                        items.add(new GankArticleItem("https://gank.io/post/"+temp.get_id(),temp.getCreatedAt()
+                                ,temp.getTitle(),temp.getAuthor(),imgLink,temp.getDesc()));
+                    }
+                    callBack.success(items);
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GankArticleData> call, @NonNull Throwable t) {
                 callBack.failed(INTERNET_ERROR);
             }
         });
