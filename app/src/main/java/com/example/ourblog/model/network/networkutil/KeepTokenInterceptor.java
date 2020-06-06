@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.ourblog.MainActivity;
+import com.example.ourblog.model.network.netbean.LoginData;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -29,12 +30,17 @@ public class KeepTokenInterceptor implements Interceptor {
             requestBuilder.addHeader("token",token);
         }
 
+        Log.d("huan",requestBuilder.build().url().toString());
+
         Response response = chain.proceed(requestBuilder.build());
 
         token = response.request().header("token");
         if (token != null){
             sharedPreferences.edit().putString("token",token).apply();
         }
+
+        Log.d("huan",response.request().url().toString());
+        Log.d("huan",response.body().toString());
         return response;
     }
 }
