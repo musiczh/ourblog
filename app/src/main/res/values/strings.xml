@@ -5,4 +5,13 @@
     <string name="my">我的</string>
     <string name="title">标题</string>
     <string name="todo">TODO</string>
+    <string name="text_in_username">请输入用户名</string>
+    <string name="text_in_password">请输入密码</string>
+    <string name="go_to_register"><![CDATA[还没账号？去注册>]]></string>
+    <string name="login">登录</string>
+    <string name="ourblog">ourBlog</string>
+    <string name="text_im_email">请输入邮箱</string>
+    <string name="text_in_phone">请输入手机号</string>
+    <string name="register">注册</string>
+
 </resources>

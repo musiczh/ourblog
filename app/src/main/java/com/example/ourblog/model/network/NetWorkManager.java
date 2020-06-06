@@ -1,18 +1,23 @@
 package com.example.ourblog.model.network;
 
+
 import androidx.annotation.NonNull;
 
 import com.example.ourblog.CallBack;
 import com.example.ourblog.model.bean.GankArticleItem;
 import com.example.ourblog.model.bean.WanArticleItem;
-import com.example.ourblog.model.network.api.GankApiService;
+import com.example.ourblog.model.entity.MyCallBack;
+import com.example.ourblog.model.network.apiservice.GankApiService;
 import com.example.ourblog.model.network.databean.GankArticleData;
 import com.example.ourblog.model.network.databean.WanArticleData;
-import com.example.ourblog.model.network.api.WanApiService;
+import com.example.ourblog.model.network.apiservice.WanApiService;
+import com.example.ourblog.model.network.netbean.RegisterMsg;
 import com.example.ourblog.model.network.networkutil.RetrofitManager;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.example.ourblog.model.network.apiservice.LoginApiService;
+import com.example.ourblog.model.network.netbean.BaseBean;
+import com.example.ourblog.model.network.netbean.LoginData;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +43,7 @@ public class NetWorkManager {
         return mNetWorkManager;
     }
 
+
     public void getWanArticle(String id, final CallBack<List<WanArticleItem>> callBack){
         RetrofitManager manager=RetrofitManager.getInstance();
         WanApiService api=manager.createRs(WanApiService.class);
@@ -45,19 +51,19 @@ public class NetWorkManager {
         items.enqueue(new Callback<WanArticleData>() {
             @Override
             public void onResponse(@NonNull Call<WanArticleData> call, @NonNull Response<WanArticleData> response) {
-                WanArticleData data=response.body();
-                if(data==null){
+                WanArticleData data = response.body();
+                if (data == null) {
                     callBack.failed(SERVER_ERROR);
-                }else if(data.getErrorCode()!=0){
+                } else if (data.getErrorCode() != 0) {
                     callBack.failed(data.getErrorMsg());
-                }else{
-                    WanArticleData.DataBean dataBean=data.getData();
-                    List<WanArticleData.DataBean.DatasBean> datasBeanList=dataBean.getDatas();
-                    List<WanArticleItem> items=new ArrayList<>();
+                } else {
+                    WanArticleData.DataBean dataBean = data.getData();
+                    List<WanArticleData.DataBean.DatasBean> datasBeanList = dataBean.getDatas();
+                    List<WanArticleItem> items = new ArrayList<>();
                     WanArticleData.DataBean.DatasBean temp;
-                    for(int i=0;i<datasBeanList.size();i++){
-                        temp=datasBeanList.get(i);
-                        items.add(new WanArticleItem(temp.getLink(),temp.getNiceShareDate(),temp.getTitle(),temp.getShareUser()));
+                    for (int i = 0; i < datasBeanList.size(); i++) {
+                        temp = datasBeanList.get(i);
+                        items.add(new WanArticleItem(temp.getLink(), temp.getNiceShareDate(), temp.getTitle(), temp.getShareUser()));
                     }
 
                     callBack.success(items);
@@ -72,6 +78,37 @@ public class NetWorkManager {
             }
         });
     }
+
+    public void register(RegisterMsg registerMsg, final MyCallBack<String> callBack){
+        RetrofitManager.getInstance().createRs(LoginApiService.class)
+                .register(
+                        registerMsg.getUsername(),
+                        registerMsg.getPassword(),
+                        registerMsg.getEmail(),
+                        registerMsg.getPhone(),
+                        registerMsg.getAddress()
+                ).enqueue(new Callback<BaseBean<String>>() {
+            @Override
+            public void onResponse(Call<BaseBean<String>> call, Response<BaseBean<String>> response) {
+                if (response.body()!=null){
+                    BaseBean<String> bean = response.body();
+                    if (bean.getCode()==1){
+                        callBack.onSucceed("注册成功");
+                    }else{
+                        callBack.onFailed(bean.getMsg());
+                    }
+                }else {
+                    callBack.onFailed("body==null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseBean<String>> call, Throwable t) {
+                callBack.onFailed("onFailure");
+            }
+        });
+    }
+
 
     public void getGrankArticle(String id, final CallBack<List<GankArticleItem>> callBack){
         RetrofitManager manager=RetrofitManager.getInstance();
@@ -112,5 +149,61 @@ public class NetWorkManager {
     }
 
 
+
+    public void login(String username,String password,final MyCallBack<LoginData> callBack){
+        RetrofitManager.getInstance().createRs(LoginApiService.class)
+                .login(username,password)
+                .enqueue(new Callback<BaseBean<LoginData>>() {
+                    @Override
+                    public void onResponse(Call<BaseBean<LoginData>> call, Response<BaseBean<LoginData>> response) {
+                        if (response.body()!=null){
+                            BaseBean<LoginData> bean = response.body();
+                            if (bean.getCode()==1){
+                                callBack.onSucceed(bean.getData());
+                            }else{
+                                callBack.onFailed(bean.getMsg());
+                            }
+
+                        }else {
+                            callBack.onFailed("body==null");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseBean<LoginData>> call, Throwable t) {
+                        t.printStackTrace();
+                        callBack.onFailed("onFailure");
+                    }
+                });
+    }
+
+    public void alterPassword(String username,
+                              String oldPassword,
+                              String newPassword,
+                              final MyCallBack<String> callBack) {
+        RetrofitManager.getInstance().createRs(LoginApiService.class)
+                .alterPassword(username, oldPassword, newPassword)
+                .enqueue(new Callback<BaseBean<String>>() {
+                    @Override
+                    public void onResponse(Call<BaseBean<String>> call, Response<BaseBean<String>> response) {
+                        if (response.body()!=null){
+                            BaseBean<String> bean = response.body();
+                            if (bean.getCode()==1){
+                                callBack.onSucceed(bean.getMsg());
+                            }else{
+                                callBack.onFailed(bean.getMsg());
+                            }
+                        }else {
+                            callBack.onFailed("body==null");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseBean<String>> call, Throwable t) {
+                            callBack.onFailed("onFailure");
+                    }
+                });
+
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.example.ourblog.model.network.api;
+package com.example.ourblog.model.network.apiservice;
 
 import com.example.ourblog.model.network.databean.GankArticleData;
 

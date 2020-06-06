@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.ourblog.model.network.netbean.LoginData;
 import com.example.ourblog.util.BottomBarHideManager;
 import com.example.ourblog.view.activity.BaseActivity;
 import com.example.ourblog.viewmodel.MainActViewModel;
@@ -23,6 +24,7 @@ public class MainActivity extends BaseActivity {
     public static Context getContext(){
         return context;
     }
+    public static LoginData loginData;
 
     /**
      * bottomBarHideManager: 底部导航栏的隐藏管理类

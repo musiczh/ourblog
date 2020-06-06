@@ -1,4 +1,4 @@
-package com.example.ourblog.model.network.api;
+package com.example.ourblog.model.network.apiservice;
 
 import com.example.ourblog.model.network.databean.WanArticleData;
 
@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface WanApiService {
-    @GET("article/list/{id}/json")
+    @GET("https://www.wanandroid.com/article/list/{id}/json")
     Call<WanArticleData> getArticle(@Path("id") String id);
 
 }

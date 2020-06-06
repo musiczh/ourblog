@@ -4,7 +4,10 @@ import com.example.ourblog.CallBack;
 import com.example.ourblog.model.bean.GankArticleItem;
 import com.example.ourblog.model.bean.WanArticleItem;
 import com.example.ourblog.model.dao.DaoManager;
+import com.example.ourblog.model.entity.MyCallBack;
+import com.example.ourblog.model.network.netbean.RegisterMsg;
 import com.example.ourblog.model.network.NetWorkManager;
+import com.example.ourblog.model.network.netbean.LoginData;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class Reposity {
         }
         return mReposity;
     }
+
 
     //如果是初始化就先从数据库拿数据再访问网络，如果不是则直接访问网路
     public void getWanArticleItem(final String id, boolean isInit, final CallBack<List<WanArticleItem>> callBack){
@@ -75,6 +79,18 @@ public class Reposity {
     }
 
 
+
+    public void register(RegisterMsg registerMsg, MyCallBack<String> callBack){
+        netWorkManager.register(registerMsg, callBack);
+    }
+
+    public void login(String username, String password, MyCallBack<LoginData> callBack){
+        netWorkManager.login(username, password, callBack);
+    }
+
+    public void alterPassword(String username,String oldPassword,String newPassword,MyCallBack<String> callBack){
+        netWorkManager.alterPassword(username, oldPassword, newPassword, callBack);
+    }
 
 
 }

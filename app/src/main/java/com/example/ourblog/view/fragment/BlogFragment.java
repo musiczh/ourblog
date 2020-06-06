@@ -3,6 +3,7 @@ package com.example.ourblog.view.fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.example.ourblog.MainActivity;
 import com.example.ourblog.R;
 import com.example.ourblog.model.network.networkutil.KeepTokenInterceptor;
 import com.example.ourblog.util.ThreadPoolManager;
+import com.example.ourblog.view.activity.LoginActivity;
 import com.example.ourblog.viewmodel.BlogViewModel;
 
 import java.io.IOException;
@@ -55,6 +57,8 @@ public class BlogFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.bottomBarHideManager.hideBar();
+                Intent intent = new Intent(mainActivity, LoginActivity.class);
+                startActivity(intent);
 
             }
         });
